@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { Menu, Moon, Sun, Bell, RefreshCw } from 'lucide-react'
 import { useApp, type Role } from '@/providers/AppProvider'

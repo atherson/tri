@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
 type Theme = 'light' | 'dark'
@@ -14,26 +16,25 @@ interface AppContextValue {
 const AppContext = createContext<AppContextValue | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('eventsync-theme') as Theme) || 'light'
-    }
-    return 'light'
-  })
-  const [role, setRole] = useState<Role>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('eventsync-role') as Role) || 'Org Admin'
-    }
-    return 'Org Admin'
-  })
+  const [theme, setTheme] = useState<Theme>('light')
+  const [role, setRole] = useState<Role>('Org Admin')
+
+  useEffect(() => {
+    try {
+      const t = localStorage.getItem('eventsync-theme') as Theme | null
+      if (t) setTheme(t)
+      const r = localStorage.getItem('eventsync-role') as Role | null
+      if (r) setRole(r)
+    } catch {}
+  }, [])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('eventsync-theme', theme)
+    try { localStorage.setItem('eventsync-theme', theme) } catch {}
   }, [theme])
 
   useEffect(() => {
-    localStorage.setItem('eventsync-role', role)
+    try { localStorage.setItem('eventsync-role', role) } catch {}
   }, [role])
 
   const userName = role === 'Super Admin' ? 'System Administrator'

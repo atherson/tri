@@ -1,4 +1,7 @@
-import { NavLink, useLocation } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, CalendarDays, Building2, Truck, Package,
   FileText, AlertTriangle, ClipboardCheck, ShieldAlert, Receipt,
@@ -8,34 +11,34 @@ import { useApp, type Role } from '@/providers/AppProvider'
 import { cn } from '@/lib/utils'
 
 interface NavItem {
-  to: string
+  href: string
   label: string
   icon: typeof LayoutDashboard
   roles?: Role[]
 }
 
 const navItems: NavItem[] = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/events', label: 'Events', icon: CalendarDays, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Finance Officer', 'Auditor'] },
-  { to: '/venues', label: 'Venues', icon: Building2, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Auditor'] },
-  { to: '/suppliers', label: 'Suppliers', icon: Truck, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Finance Officer', 'Supplier', 'Auditor'] },
-  { to: '/equipment', label: 'Equipment', icon: Boxes, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
-  { to: '/contracts', label: 'Rental Contracts', icon: FileText, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Finance Officer', 'Supplier', 'Auditor'] },
-  { to: '/assignments', label: 'Assignments', icon: Package, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
-  { to: '/movements', label: 'Movements', icon: Wrench, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
-  { to: '/scanner', label: 'QR Scanner', icon: ScanLine, roles: ['Super Admin', 'Org Admin', 'Operations Manager', 'Field Staff'] },
-  { to: '/alerts', label: 'Sync Alerts', icon: AlertTriangle },
-  { to: '/approvals', label: 'Approvals', icon: ClipboardCheck, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Finance Officer', 'Auditor'] },
-  { to: '/incidents', label: 'Incidents', icon: ShieldAlert, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
-  { to: '/invoices', label: 'Invoices', icon: Receipt, roles: ['Super Admin', 'Org Admin', 'Finance Officer', 'Supplier', 'Auditor'] },
-  { to: '/reports', label: 'Reports', icon: BarChart3, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Finance Officer', 'Auditor'] },
-  { to: '/audit', label: 'Audit Logs', icon: ScrollText, roles: ['Super Admin', 'Org Admin', 'Auditor'] },
-  { to: '/settings', label: 'Settings', icon: Settings, roles: ['Super Admin', 'Org Admin'] },
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/events', label: 'Events', icon: CalendarDays, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Finance Officer', 'Auditor'] },
+  { href: '/venues', label: 'Venues', icon: Building2, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Auditor'] },
+  { href: '/suppliers', label: 'Suppliers', icon: Truck, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Finance Officer', 'Supplier', 'Auditor'] },
+  { href: '/equipment', label: 'Equipment', icon: Boxes, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
+  { href: '/contracts', label: 'Rental Contracts', icon: FileText, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Finance Officer', 'Supplier', 'Auditor'] },
+  { href: '/assignments', label: 'Assignments', icon: Package, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
+  { href: '/movements', label: 'Movements', icon: Wrench, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
+  { href: '/scanner', label: 'QR Scanner', icon: ScanLine, roles: ['Super Admin', 'Org Admin', 'Operations Manager', 'Field Staff'] },
+  { href: '/alerts', label: 'Sync Alerts', icon: AlertTriangle },
+  { href: '/approvals', label: 'Approvals', icon: ClipboardCheck, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Finance Officer', 'Auditor'] },
+  { href: '/incidents', label: 'Incidents', icon: ShieldAlert, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Operations Manager', 'Field Staff', 'Auditor'] },
+  { href: '/invoices', label: 'Invoices', icon: Receipt, roles: ['Super Admin', 'Org Admin', 'Finance Officer', 'Supplier', 'Auditor'] },
+  { href: '/reports', label: 'Reports', icon: BarChart3, roles: ['Super Admin', 'Org Admin', 'Event Manager', 'Finance Officer', 'Auditor'] },
+  { href: '/audit', label: 'Audit Logs', icon: ScrollText, roles: ['Super Admin', 'Org Admin', 'Auditor'] },
+  { href: '/settings', label: 'Settings', icon: Settings, roles: ['Super Admin', 'Org Admin'] },
 ]
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { role } = useApp()
-  const location = useLocation()
+  const pathname = usePathname()
 
   const visibleItems = navItems.filter(item => !item.roles || item.roles.includes(role))
 
@@ -59,11 +62,11 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
         </div>
         <nav className="flex flex-col gap-0.5 overflow-y-auto p-3" style={{ maxHeight: 'calc(100vh - 4rem)' }}>
           {visibleItems.map(item => {
-            const active = location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(item.to))
+            const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
             return (
-              <NavLink
-                key={item.to}
-                to={item.to}
+              <Link
+                key={item.href}
+                href={item.href}
                 onClick={onClose}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
@@ -74,7 +77,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
               >
                 <item.icon className="h-4.5 w-4.5 shrink-0" style={{ width: '1.125rem', height: '1.125rem' }} />
                 {item.label}
-              </NavLink>
+              </Link>
             )
           })}
         </nav>

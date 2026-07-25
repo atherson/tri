@@ -1,9 +1,10 @@
+'use client'
+
 import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 
-export function Layout() {
+export function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -12,7 +13,7 @@ export function Layout() {
       <div className="lg:pl-64">
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="p-4 sm:p-6 lg:p-8">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>

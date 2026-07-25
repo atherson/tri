@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL as string | undefined
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string | undefined
 
 if (!url || !key) {
-  console.error('Missing Supabase env vars. Check .env for VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+  console.error('Missing Supabase env vars. Check .env for NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
 }
 
 export const supabase = createClient(url ?? '', key ?? '', {
